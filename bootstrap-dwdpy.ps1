@@ -24,9 +24,6 @@ $normalizedBaseDir = $baseDir.TrimEnd('\') -replace '/', '\'
 $envPathRaw = [Environment]::GetEnvironmentVariable("Path", "User")
 $envPathList = $envPathRaw.Split(";") | ForEach-Object { ($_ -replace '/', '\').TrimEnd('\') }
 
-# Debugging: Output current PATH
-Write-Output "Current PATH:"
-$envPathList | ForEach-Object { Write-Output $_ }
 
 # Add to PATH if not already there
 if (-not ($envPathList -contains $normalizedBaseDir)) {
