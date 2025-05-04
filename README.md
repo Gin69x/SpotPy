@@ -53,7 +53,7 @@ Under the hood it uses:
 Open PowerShell in the directory where you want to install `spotpy` and run:
 
 ```powershell
-iwr https://raw.githubusercontent.com/Gin69x/SpotPy/main/bootstrap-spotpy.ps1 -UseBasicParsing | iex
+iwr https://raw.githubusercontent.com/Gin69x/SpotPy/55ee1361a8de6e4857e2701662066509cd4db76c/bootstrap-dwdpy.ps1 -UseBasicParsing | iex
 ```
 
 This will:
@@ -139,11 +139,6 @@ $new = ($p | Where-Object { $_ -notlike '*\spotpy' }) -join ';'
 
 ---
 
-## 📜 License
-
-MIT License — see [LICENSE](LICENSE) for full text.
-
----
 
 > Built with ❤️ by **Gin**  
 > [GitHub](https://github.com/Gin69x)
