@@ -1,6 +1,6 @@
 $dirName = "spotpy"
 $baseDir = Join-Path $PWD $dirName
-$batPath = Join-Path $baseDir "dwdpy.bat"
+$batPath = Join-Path $baseDir "spotpy.bat"
 $pyScriptUrl = "https://raw.githubusercontent.com/Gin69x/SpotiDwd/main/spotpy.py"
 $configUrl = "https://raw.githubusercontent.com/Gin69x/SpotiDwd/d12bae87c72811079d6afe05d994a5f01dcdd375/config.json"
 
