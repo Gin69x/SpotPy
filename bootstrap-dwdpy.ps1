@@ -39,5 +39,7 @@ if (-not ($envPathList -contains $normalizedBaseDir)) {
 $updatedEnvPathRaw = [Environment]::GetEnvironmentVariable("Path", "User")
 $updatedEnvPathList = $updatedEnvPathRaw.Split(";") | ForEach-Object { ($_ -replace '/', '\').TrimEnd('\') }
 
+Write-Output "Restart Terminal to use the command, 'spotpy'"
+
 # Open the directory in File Explorer
 Start-Process "explorer.exe" $baseDir
