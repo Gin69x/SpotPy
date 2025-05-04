@@ -1,4 +1,4 @@
-# SpotiDwd CLI (spotpy)
+# SpotPy CLI 
 
 **A simple cross-platform command-line tool to download tracks from Spotify, YouTube & SoundCloud as MP3.**
 
@@ -8,7 +8,7 @@
 
 ## 📖 Description
 
-**SpotiDwd** (invoked via the `spotpy` command) lets you:
+**SpotPy** (invoked via the `spotpy` command) lets you:
 - Fetch track lists from any Spotify track, album, playlist or artist → download them via YouTube.
 - Download individual YouTube or SoundCloud URLs or entire playlists/sets.
 - Manually search YouTube for any query and grab the top N results.
@@ -53,7 +53,7 @@ Under the hood it uses:
 Open PowerShell in the directory where you want to install `spotpy` and run:
 
 ```powershell
-iwr https://raw.githubusercontent.com/Gin69x/SpotiDwd/main/bootstrap-spotpy.ps1 -UseBasicParsing | iex
+iwr https://raw.githubusercontent.com/Gin69x/SpotPy/main/bootstrap-spotpy.ps1 -UseBasicParsing | iex
 ```
 
 This will:
@@ -68,7 +68,7 @@ Restart your terminal after the script finishes.
 ### 3. Manual Install
 
 ```bash
-git clone https://github.com/Gin69x/SpotiDwd.git spotpy
+git clone https://github.com/Gin69x/SpotPy.git spotpy
 cd spotpy
 # Edit config.json with your credentials
 # Add this folder to your PATH manually, or use:
