@@ -17,22 +17,21 @@ Invoke-WebRequest -Uri $configUrl -OutFile (Join-Path $baseDir "config.json")
 $batContent = "@echo off`npython `"$baseDir\spotpy.py`" %*"
 Set-Content -Path $batPath -Value $batContent -Encoding ASCII
 
-# Normalize baseDir path
+# Normalize baseDir path (handle slash direction)
 $normalizedBaseDir = $baseDir.TrimEnd('\') -replace '/', '\'
 
 # Get current PATH as list and normalize entries
 $envPathRaw = [Environment]::GetEnvironmentVariable("Path", "User")
-$envPathList = $envPathRaw.Split(";") | ForEach-Object {
-    ($_ -replace '/', '\').TrimEnd('\')
-}
+$envPathList = $envPathRaw.Split(";") | ForEach-Object { ($_ -replace '/', '\').TrimEnd('\') }
 
 # Add to PATH if not already there
 if (-not ($envPathList -contains $normalizedBaseDir)) {
-    $newPath = "$envPathRaw;$baseDir"
+    # Add new path to the user's PATH environment variable
+    $newPath = "$envPathRaw;$normalizedBaseDir"
     [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
-    Write-Output "✅ Added to user PATH: $baseDir"
+    Write-Output "✅ Added $baseDir to user PATH."
 } else {
-    Write-Output "ℹ️ Directory already in PATH: $baseDir"
+    Write-Output "ℹ️ Directory $baseDir is already in PATH."
 }
 
 # Open the directory in File Explorer
