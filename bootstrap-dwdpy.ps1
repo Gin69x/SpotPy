@@ -1,76 +1,30 @@
-<#
-.SYNOPSIS
-  Bootstraps dwdpy by downloading the Python script, template config, and creating a .bat launcher.
+$dirName = "spotpy"
+$baseDir = Join-Path $PWD $dirName
+$batPath = Join-Path $baseDir "dwdpy.bat"
+$pyScriptUrl = "https://raw.githubusercontent.com/Gin69x/SpotiDwd/main/spotpy.py"
+$configUrl = "https://raw.githubusercontent.com/Gin69x/SpotiDwd/d12bae87c72811079d6afe05d994a5f01dcdd375/config.json"
 
-.DESCRIPTION
-  Creates a `cmd` folder next to this script, downloads `spotidwd.py` and `config.json` into it,
-  writes `dwdpy.bat` using %~dp0 to locate the Python script, and adds the folder to your user PATH.
+# Create directory
+New-Item -ItemType Directory -Path $baseDir -Force | Out-Null
 
-.PARAMETER InstallSubdir
-  Name of the subdirectory to install into (defaults to "cmd").
+# Download Python script
+Invoke-WebRequest -Uri $pyScriptUrl -OutFile (Join-Path $baseDir "spotpy.py")
 
-.PARAMETER ScriptUrl
-  URL to download the main Python script from.
+# Download config.json
+Invoke-WebRequest -Uri $configUrl -OutFile (Join-Path $baseDir "config.json")
 
-.PARAMETER ConfigUrl
-  URL to download the template config.json from.
-#>
-
-param(
-  [string]$InstallSubdir = 'cmd',
-  [string]$ScriptUrl      = 'https://raw.githubusercontent.com/<your-user>/<your-repo>/main/spotidwd.py',
-  [string]$ConfigUrl      = 'https://raw.githubusercontent.com/<your-user>/<your-repo>/main/config.json'
-)
-
-# 1) Determine install directory
-$installDir = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Definition) $InstallSubdir
-if (-not (Test-Path $installDir)) {
-    New-Item -ItemType Directory -Path $installDir | Out-Null
-    Write-Host "✅ Created install directory: $installDir"
-} else {
-    Write-Host "ℹ️  Using existing directory: $installDir"
-}
-
-# 2) Download spotidwd.py
-$scriptPath = Join-Path $installDir 'spotidwd.py'
-try {
-    Invoke-WebRequest -Uri $ScriptUrl -UseBasicParsing -OutFile $scriptPath -ErrorAction Stop
-    Write-Host "✅ Downloaded Python script to $scriptPath"
-}
-catch {
-    Write-Host "[red]✖ Failed to download spotidwd.py from $ScriptUrl[/red]"
-    Write-Host $_.Exception.Message
-    exit 1
-}
-
-# 3) Download config.json
-$configPath = Join-Path $installDir 'config.json'
-try {
-    Invoke-WebRequest -Uri $ConfigUrl -UseBasicParsing -OutFile $configPath -ErrorAction Stop
-    Write-Host "✅ Downloaded config template to $configPath"
-}
-catch {
-    Write-Host "[yellow]⚠ Could not download config.json; you may need to create it manually.[/yellow]"
-}
-
-# 4) Write the dwdpy.bat launcher
-$batPath = Join-Path $installDir 'dwdpy.bat'
-$batContent = @'
-@echo off
-REM dwdpy launcher – forwards all args to the Python script in the same folder
-python "%~dp0spotidwd.py" %*
-'@
+# Create dwdpy.bat with correct path
+$batContent = "@echo off`npython `"$baseDir\spotpy.py`" %*"
 Set-Content -Path $batPath -Value $batContent -Encoding ASCII
-Write-Host "✅ Created launcher batch file: $batPath"
 
-# 5) Add installDir to USER PATH if needed
-$userPath = [Environment]::GetEnvironmentVariable('Path','User')
-if ($userPath.Split(';') -contains $installDir) {
-    Write-Host "ℹ️  $installDir is already in your user PATH."
+# Add directory to PATH (current user)
+$envPath = [System.Environment]::GetEnvironmentVariable("Path", "User")
+if (-not $envPath.Split(";") -contains $baseDir) {
+    [System.Environment]::SetEnvironmentVariable("Path", "$envPath;$baseDir", "User")
+    Write-Output "Added $baseDir to user PATH."
 } else {
-    $newPath = "$userPath;$installDir"
-    [Environment]::SetEnvironmentVariable('Path',$newPath,'User')
-    Write-Host "✅ Added $installDir to your user PATH."
+    Write-Output "Directory already in PATH."
 }
 
-Write-Host "`n🎉 Bootstrap complete! Please restart your terminal session to pick up the new PATH."
+# Open the directory
+Start-Process "explorer.exe" $baseDir
