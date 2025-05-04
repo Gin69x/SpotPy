@@ -13,18 +13,27 @@ Invoke-WebRequest -Uri $pyScriptUrl -OutFile (Join-Path $baseDir "spotpy.py")
 # Download config.json
 Invoke-WebRequest -Uri $configUrl -OutFile (Join-Path $baseDir "config.json")
 
-# Create dwdpy.bat with correct path
+# Create spotpy.bat with the correct full path
 $batContent = "@echo off`npython `"$baseDir\spotpy.py`" %*"
 Set-Content -Path $batPath -Value $batContent -Encoding ASCII
 
-# Add directory to PATH (current user)
-$envPath = [System.Environment]::GetEnvironmentVariable("Path", "User")
-if (-not $envPath.Split(";") -contains $baseDir) {
-    [System.Environment]::SetEnvironmentVariable("Path", "$envPath;$baseDir", "User")
-    Write-Output "Added $baseDir to user PATH."
-} else {
-    Write-Output "Directory already in PATH."
+# Normalize baseDir path
+$normalizedBaseDir = $baseDir.TrimEnd('\') -replace '/', '\'
+
+# Get current PATH as list and normalize entries
+$envPathRaw = [Environment]::GetEnvironmentVariable("Path", "User")
+$envPathList = $envPathRaw.Split(";") | ForEach-Object {
+    ($_ -replace '/', '\').TrimEnd('\')
 }
 
-# Open the directory
+# Add to PATH if not already there
+if (-not ($envPathList -contains $normalizedBaseDir)) {
+    $newPath = "$envPathRaw;$baseDir"
+    [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
+    Write-Output "✅ Added to user PATH: $baseDir"
+} else {
+    Write-Output "ℹ️ Directory already in PATH: $baseDir"
+}
+
+# Open the directory in File Explorer
 Start-Process "explorer.exe" $baseDir
