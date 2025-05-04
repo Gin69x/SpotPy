@@ -24,6 +24,10 @@ $normalizedBaseDir = $baseDir.TrimEnd('\') -replace '/', '\'
 $envPathRaw = [Environment]::GetEnvironmentVariable("Path", "User")
 $envPathList = $envPathRaw.Split(";") | ForEach-Object { ($_ -replace '/', '\').TrimEnd('\') }
 
+# Debugging: Output current PATH
+Write-Output "Current PATH:"
+$envPathList | ForEach-Object { Write-Output $_ }
+
 # Add to PATH if not already there
 if (-not ($envPathList -contains $normalizedBaseDir)) {
     # Add new path to the user's PATH environment variable
@@ -33,6 +37,14 @@ if (-not ($envPathList -contains $normalizedBaseDir)) {
 } else {
     Write-Output "ℹ️ Directory $baseDir is already in PATH."
 }
+
+# Verify if the directory was added by checking PATH again
+$updatedEnvPathRaw = [Environment]::GetEnvironmentVariable("Path", "User")
+$updatedEnvPathList = $updatedEnvPathRaw.Split(";") | ForEach-Object { ($_ -replace '/', '\').TrimEnd('\') }
+
+# Debugging: Output updated PATH
+Write-Output "Updated PATH after modification:"
+$updatedEnvPathList | ForEach-Object { Write-Output $_ }
 
 # Open the directory in File Explorer
 Start-Process "explorer.exe" $baseDir
