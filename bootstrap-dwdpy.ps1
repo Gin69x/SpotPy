@@ -33,9 +33,9 @@ if (-not ($envPathList -contains $normalizedBaseDir)) {
     # Add new path to the user's PATH environment variable
     $newPath = "$envPathRaw;$normalizedBaseDir"
     [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
-    Write-Output "✅ Added $baseDir to user PATH."
+    Write-Output "Added $baseDir to user PATH."
 } else {
-    Write-Output "ℹ️ Directory $baseDir is already in PATH."
+    Write-Output "Directory $baseDir is already in PATH."
 }
 
 # Verify if the directory was added by checking PATH again
