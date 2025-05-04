@@ -39,9 +39,5 @@ if (-not ($envPathList -contains $normalizedBaseDir)) {
 $updatedEnvPathRaw = [Environment]::GetEnvironmentVariable("Path", "User")
 $updatedEnvPathList = $updatedEnvPathRaw.Split(";") | ForEach-Object { ($_ -replace '/', '\').TrimEnd('\') }
 
-# Debugging: Output updated PATH
-Write-Output "Updated PATH after modification:"
-$updatedEnvPathList | ForEach-Object { Write-Output $_ }
-
 # Open the directory in File Explorer
 Start-Process "explorer.exe" $baseDir
