@@ -53,7 +53,7 @@ Under the hood it uses:
 Open PowerShell in the directory where you want to install `spotpy` and run:
 
 ```powershell
-iwr https://raw.githubusercontent.com/Gin69x/SpotPy/55ee1361a8de6e4857e2701662066509cd4db76c/bootstrap-dwdpy.ps1 -UseBasicParsing | iex
+iwr https://raw.githubusercontent.com/Gin69x/SpotPy/refs/heads/main/bootstrap-dwdpy.ps1 -UseBasicParsing | iex
 ```
 
 This will:
